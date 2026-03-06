@@ -1,0 +1,30 @@
+{
+  "name": "Control de Planificación Familiar",
+  "short_name": "Planif. Familiar",
+  "description": "Sistema de seguimiento de mujeres en edad fértil – Planificación Familiar MINSAL El Salvador",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#4a0e5c",
+  "theme_color": "#7b2d8b",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "categories": [
+    "health",
+    "medical"
+  ],
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "scope": "./"
+}
