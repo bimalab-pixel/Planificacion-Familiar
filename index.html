@@ -922,6 +922,15 @@ window.renderList = renderList;
 window.showToast = showToast;
 window.showModal = showModal;
 
+/* Recarga completa desde localStorage — usada tras bajar datos de la nube */
+window.reloadFromStorage = function(){
+  try{ records = JSON.parse(localStorage.getItem(LS_KEY)) || []; }catch(e){ records = []; }
+  window.records = records;
+  updateHomeStats();
+  if(currentScreen === 'screen-list') renderList();
+  if(currentScreen === 'screen-alerts') renderAlerts && renderAlerts();
+};
+
 if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){localStorage.setItem('pwa_pf_shown','1');const fb=document.getElementById('fab-install');if(fb)fb.style.display='none';}
 </script>
 
@@ -1059,11 +1068,8 @@ window.confirmDownload = function(){
           return;
         }
         localStorage.setItem('minsal_pf_v1', JSON.stringify(cloudRecs));
-        // Actualizar en memoria
-        if(window.records !== undefined) window.records = cloudRecs;
-        try{ window.records = JSON.parse(localStorage.getItem('minsal_pf_v1'))||[]; }catch(e){}
-        window.updateHomeStats && window.updateHomeStats();
-        window.renderList && window.renderList();
+        // Recargar en memoria y refrescar UI al instante
+        if(window.reloadFromStorage) window.reloadFromStorage();
         const updatedAt = data.updatedAt
           ? new Date(data.updatedAt).toLocaleString('es-SV')
           : 'desconocido';
