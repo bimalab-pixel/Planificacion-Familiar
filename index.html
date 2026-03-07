@@ -32,30 +32,22 @@ window.addEventListener('beforeinstallprompt',e=>{
   if(!localStorage.getItem('pwa_pf_shown'))
     setTimeout(()=>{ const b=document.getElementById('install-banner'); if(b) b.classList.add('show'); },2800);
 });
-function installPWA(){
-  const banner=document.getElementById('install-banner');
-  if(banner) banner.classList.remove('show');
+function _hidePwaUI(){
+  const banner=document.getElementById('install-banner'); if(banner) banner.classList.remove('show');
+  const fab=document.getElementById('fab-install'); if(fab) fab.style.display='none';
+  const sec=document.getElementById('pwa-install-section'); if(sec) sec.style.display='none';
   localStorage.setItem('pwa_pf_shown','1');
+}
+function installPWA(){
   if(_deferredPrompt){
     _deferredPrompt.prompt();
-    _deferredPrompt.userChoice.then(c=>{
-      _deferredPrompt=null;
-      if(c.outcome==='accepted'){ const fb=document.getElementById('fab-install'); if(fb) fb.style.display='none'; }
-    });
+    _deferredPrompt.userChoice.then(r=>{ _deferredPrompt=null; if(r.outcome==='accepted') _hidePwaUI(); });
   } else {
     alert('En iPhone/Safari:\n1. Toca el ícono Compartir (📤)\n2. "Agregar a pantalla de inicio"');
   }
 }
-function dismissBanner(){
-  const banner=document.getElementById('install-banner');
-  if(banner) banner.classList.remove('show');
-  localStorage.setItem('pwa_pf_shown','1');
-}
-window.addEventListener('appinstalled',()=>{
-  localStorage.setItem('pwa_pf_shown','1');
-  const b=document.getElementById('install-banner'); if(b) b.classList.remove('show');
-  const fb=document.getElementById('fab-install'); if(fb) fb.style.display='none';
-});
+function dismissBanner(){ _hidePwaUI(); }
+window.addEventListener('appinstalled',()=>{ _hidePwaUI(); }));
 if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone)
   localStorage.setItem('pwa_pf_shown','1');
 </script>
@@ -428,6 +420,25 @@ body{font-family:'Nunito',sans-serif;background:var(--light);color:var(--text);f
         </button>
       </div>
       <div class="cloud-status" id="cloud-status">Sin actividad reciente</div>
+    </div>
+
+    <div id="pwa-install-section" style="padding:.4rem 0 .15rem">
+      <button id="btn-install-main" onclick="installPWA()" style="
+        display:flex;align-items:center;justify-content:center;gap:.65rem;
+        width:100%;padding:.9rem 1rem;border-radius:14px;border:none;cursor:pointer;
+        background:linear-gradient(135deg,#00796b,#26a69a);
+        color:#fff;font-family:inherit;font-size:.95rem;font-weight:800;
+        box-shadow:0 6px 20px rgba(0,121,107,.38);letter-spacing:.02em;
+        transition:all .22s;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" style="width:22px;height:22px;flex-shrink:0">
+          <polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/>
+          <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/>
+        </svg>
+        📲 Instalar aplicación en este dispositivo
+      </button>
+      <p style="text-align:center;font-size:.65rem;color:rgba(255,255,255,.5);margin-top:.38rem">
+        Funciona sin internet · Acceso rápido desde pantalla de inicio
+      </p>
     </div>
 
     <div class="danger-zone">
@@ -931,7 +942,13 @@ window.reloadFromStorage = function(){
   if(currentScreen === 'screen-alerts') renderAlerts && renderAlerts();
 };
 
-if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){localStorage.setItem('pwa_pf_shown','1');const fb=document.getElementById('fab-install');if(fb)fb.style.display='none';}
+if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){
+  localStorage.setItem('pwa_pf_shown','1');
+  window.addEventListener('DOMContentLoaded',function(){
+    var sec=document.getElementById('pwa-install-section'); if(sec) sec.style.display='none';
+    var fab=document.getElementById('fab-install'); if(fab) fab.style.display='none';
+  });
+}
 </script>
 
 <!-- ════════════════════════════════════════════
