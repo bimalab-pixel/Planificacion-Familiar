@@ -11,9 +11,9 @@
 <meta name="apple-mobile-web-app-title" content="Planif. Familiar"/>
 <meta name="description" content="Sistema de seguimiento de mujeres en edad fértil – Planificación Familiar MINSAL"/>
 <link rel="manifest" href="manifest.json"/>
-<link rel="apple-touch-icon" href="icons/icon-192x192.png"/>
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png"/>
-<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png"/>
+<link rel="apple-touch-icon" href="icon-192x192.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512x512.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 
 <script>
@@ -47,9 +47,14 @@ function installPWA(){
   }
 }
 function dismissBanner(){ _hidePwaUI(); }
-window.addEventListener('appinstalled',()=>{ _hidePwaUI(); }));
-if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone)
+window.addEventListener('appinstalled',()=>{ _hidePwaUI(); });
+if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){
   localStorage.setItem('pwa_pf_shown','1');
+  window.addEventListener('DOMContentLoaded',function(){
+    var sec=document.getElementById('pwa-install-section'); if(sec) sec.style.display='none';
+    var fab=document.getElementById('fab-install'); if(fab) fab.style.display='none';
+  });
+}
 </script>
 
 <style>
